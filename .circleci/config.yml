@@ -46,7 +46,9 @@ jobs:
   deploiement:
     docker:
       - image: cimg/base:stable
-    steps: 
+    steps:
+      - attach_workspace:
+          at: .
       - run: ls -Rl 
 
 # Invoke jobs via workflows
