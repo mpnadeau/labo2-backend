@@ -2,6 +2,9 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+orbs:
+  node: circleci/node@5.1.0
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -17,10 +20,22 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+    job-avec-node:
+      docker:
+        - image: cimg/node:17.4.0
+      steps:
+       - step 1
+  checkoutEtTests:
+    docker:
+      -image: cimg/node:17.4.0
+    steps: 
+      - run: git clone https://github.com/mpnadeau/labo2-backend/
+      - run: cd labo2-backend && npm install
+      - run: cd labo2-backend && npm run test
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello
+      - checkoutEtTests
