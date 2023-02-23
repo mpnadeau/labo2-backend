@@ -28,10 +28,36 @@ jobs:
       - run: git clone https://github.com/mpnadeau/labo2-backend/
       - run: cd labo2-backend && npm install
       - run: cd labo2-backend && npm run test
+  
+  integrationFrontEnd:
+    docker:
+      - image: cimg/node:17.4.0
+    steps: 
+      - run: git clone https://github.com/mpnadeau/labo2-backend/
+      - run: git clone https://github.com/mpnadeau/labo2-frontEnd/
+      - run: cd labo2-frontEnd && npm install
+      - run: cd labo2-frontEnd && npm run build
+      - run: mkdir labo2-backend/public
+      - run: cp -rT labo2-frontEnd/build labo2-backend/public
+      - persist_to_workspace:
+          root: .
+          paths:
+            - labo2-backend
+  deploiement:
+    docker:
+      - image: cimg/base:stable
+    steps: 
+      - run: ls -Rl 
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  build:
     jobs:
-      - checkoutEtTests
+    - checkoutEtTests
+    - integrationFrontEnd:
+        requires:
+          - checkoutEtTests
+    - deploiement:
+        requires:
+        - integrationFrontEnd
