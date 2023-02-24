@@ -20,6 +20,8 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+      - run: cd .. && ls -Rl 
+      - run: cd ../.. && ls -Rl
           
   checkoutEtTests:
     docker:
@@ -63,3 +65,4 @@ workflows:
     - deploiement:
         requires:
         - integrationFrontEnd
+    - say-hello
